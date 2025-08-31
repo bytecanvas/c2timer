@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="icon.png" />
+
+    <title>C2-Prüfungstimer</title>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+        color: white;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* Crown + Title */
+      .header {
+        margin-top: 20px;
+      }
+      .crown {
+        font-size: 2.5rem;
+        animation: bounce 1.5s infinite;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+      h1 {
+        margin: 5px 0 15px 0;
+        font-size: 1.8rem;
+        font-weight: 600;
+      }
+
+      .container {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .card {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 20px;
+        border-radius: 16px;
+        flex: 1;
+        min-width: 220px;
+        max-width: 280px;
+      }
+
+      .card h3 {
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .preset button {
+        display: block;
+        width: 100%;
+        margin: 8px 0;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        font-weight: 500;
+      }
+      .preset button:hover {
+        opacity: 0.9;
+      }
+
+      .timer-container {
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+        min-height: 320px;
+      }
+
+      /* Cyber square glowing */
+      .timer-box {
+        width: 200px;
+        height: 200px;
+        border-radius: 12px;
+        border: 3px solid cyan;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 40px;
+        background: transparent;
+        box-shadow: 0 0 20px cyan, 0 0 40px cyan,
+          inset 0 0 20px rgba(0, 255, 255, 0.3);
+        animation: glow 2s infinite alternate;
+      }
+
+      @keyframes glow {
+        from {
+          box-shadow: 0 0 10px cyan, 0 0 20px cyan,
+            inset 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+        to {
+          box-shadow: 0 0 20px #00fff7, 0 0 50px #00ffe5,
+            inset 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+      }
+
+      .timer {
+        font-size: 2rem;
+        font-weight: bold;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .controls {
+        margin-top: 260px; /* push buttons below cyber square */
+      }
+      .controls button {
+        margin: 6px;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+      .controls button:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .custom input {
+        width: 100%;
+        max-width: 100px;
+        text-align: center;
+        border-radius: 8px;
+        padding: 6px;
+        border: none;
+        font-size: 1rem;
+        margin: 8px auto;
+        display: block;
+      }
+      .custom button {
+        margin-top: 10px;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      footer {
+        padding: 15px;
+        font-size: 0.9rem;
+        opacity: 0.85;
+        line-height: 1.5;
+      }
+
+      /* Mobile fix */
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+        .timer-box {
+          width: 160px;
+          height: 160px;
+          top: 20px;
+        }
+        .controls {
+          margin-top: 220px;
+        }
+        .timer {
+          font-size: 1.6rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="crown">👑</div>
+      <h1>C2-Prüfungstimer</h1>
+    </div>
+
+    <div class="container">
+      <div class="card preset">
+        <h3>Vorlagen</h3>
+        <button
+          style="background: #e74c3c"
+          onclick="setTimer(80*60, '#e74c3c')"
+        >
+          📖 Lesen – 80 Min
+        </button>
+        <button
+          style="background: #3498db"
+          onclick="setTimer(35*60, '#3498db')"
+        >
+          🎧 Hören – 35 Min
+        </button>
+        <button
+          style="background: #2ecc71"
+          onclick="setTimer(80*60, '#2ecc71')"
+        >
+          ✍️ Schreiben – 80 Min
+        </button>
+        <button
+          style="background: #f39c12"
+          onclick="setTimer(15*60, '#f39c12')"
+        >
+          🗣️ Sprechen – 15 Min
+        </button>
+      </div>
+
+      <div class="timer-container">
+        <div class="timer-box" id="timerBox">
+          <div class="timer" id="timer" onclick="stopAndReset()">0:00</div>
+        </div>
+        <div class="controls">
+          <button onclick="startTimer()">▶ Start</button>
+          <button onclick="pauseTimer()">⏸ Pause</button>
+          <button onclick="stopTimer()">⏹ Stop</button>
+          <button onclick="resetTimer()">🔄 Reset</button>
+        </div>
+      </div>
+
+      <div class="card custom">
+        <h3>Eigene Dauer</h3>
+        <input
+          type="number"
+          id="customMinutes"
+          placeholder="z. B. 25"
+          min="1"
+          step="1"
+        />
+        <button style="background: #9b59b6" onclick="setCustom()">Start</button>
+      </div>
+    </div>
+
+    <footer>
+      <div>„Krönung deiner Prüfung – C2”</div>
+      <div>Made with ❤️ von @Aayush</div>
+    </footer>
+
+    <audio id="beep" loop>
+      <source
+        src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+        type="audio/ogg"
+      />
+    </audio>
+
+    <script>
+      let timerInterval;
+      let timeLeft = 0;
+      let running = false;
+      let color = "cyan";
+      const timerEl = document.getElementById("timer");
+      const boxEl = document.getElementById("timerBox");
+      const beep = document.getElementById("beep");
+
+      function setTimer(seconds, clr) {
+        stopTimer();
+        timeLeft = seconds;
+        color = clr;
+        updateDisplay();
+        boxEl.style.borderColor = clr;
+        boxEl.style.boxShadow = `0 0 20px ${clr}, 0 0 40px ${clr}, inset 0 0 20px rgba(0,0,0,0.2)`;
+      }
+
+      function setCustom() {
+        let mins = parseInt(document.getElementById("customMinutes").value, 10);
+        if (!mins || mins <= 0) return;
+        setTimer(mins * 60, "#9b59b6");
+      }
+
+      function updateDisplay() {
+        let sign = timeLeft < 0 ? "-" : "";
+        let absTime = Math.abs(timeLeft);
+        let m = Math.floor(absTime / 60);
+        let s = absTime % 60;
+        timerEl.textContent = `${sign}${m}:${s.toString().padStart(2, "0")}`;
+      }
+
+      function startTimer() {
+        if (running || timeLeft <= 0) return;
+        running = true;
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          updateDisplay();
+          if (timeLeft <= 0) beep.play();
+        }, 1000);
+      }
+
+      function pauseTimer() {
+        clearInterval(timerInterval);
+        running = false;
+      }
+
+      function stopTimer() {
+        clearInterval(timerInterval);
+        running = false;
+        beep.pause();
+        beep.currentTime = 0;
+      }
+
+      function resetTimer() {
+        stopTimer();
+        timeLeft = 0;
+        updateDisplay();
+      }
+
+      function stopAndReset() {
+        if (timeLeft <= 0) resetTimer();
+        else stopTimer();
+      }
+    </script>
+  </body>
+</html>
